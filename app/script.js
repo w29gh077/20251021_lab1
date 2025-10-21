@@ -40,9 +40,22 @@ function init() {
     updateScoreDisplay();
 }
 
-// 不安全的評估函數
+// 安全的輸入評估函數
 function evaluateUserInput(input) {
-    return eval(input); // CWE-95: 不安全的 eval 使用
+    // 驗證輸入是否為數字
+    if (!/^\d+$/.test(input)) {
+        throw new Error('只允許數字輸入');
+    }
+    
+    // 安全地轉換為數字
+    const number = Number(input);
+    
+    // 檢查數值範圍
+    if (number < 0 || number > 1000) {
+        throw new Error('數值必須在 0-1000 之間');
+    }
+    
+    return number;
 }
 
 // 處理格子點擊
