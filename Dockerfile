@@ -1,4 +1,19 @@
-FROM nginx:stable-alpine3.18-perl
+# 建構階段
+FROM nginx:stable-alpine3.19 AS builder
+
+# 安裝修復版本的 PCRE2
+RUN apk add --no-cache pcre2>=10.46-r0
+
+# 最終階段
+FROM nginx:stable-alpine3.19
+
+# 複製修復版本的 PCRE2
+COPY --from=builder /usr/lib/libpcre2-* /usr/lib/
+
+# 安全掃描
+RUN apk add --no-cache trivy && \
+    trivy filesystem --exit-code 1 --no-progress / && \
+    apk del trivy
 
 # 建立非 root 用戶
 RUN addgroup -S nginx \
