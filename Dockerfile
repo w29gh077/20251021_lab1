@@ -1,4 +1,4 @@
-FROM nginx:stable-alpine
+FROM nginx:stable-alpine3.18-perl
 
 # 建立非 root 用戶
 RUN addgroup -S nginx \
